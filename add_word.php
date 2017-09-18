@@ -34,6 +34,7 @@
     if(empty($filtered_explode[0])) {
     } else {
     if($result->num_rows > 0) {
+         http_response_code(200);
         echo json_encode("detta namn finns redan ");
     } else {
     $stmt->execute();
