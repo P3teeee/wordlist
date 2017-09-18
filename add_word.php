@@ -16,18 +16,30 @@
     $filtered = filter_input(INPUT_POST, "text", FILTER_SANITIZE_SPECIAL_CHARS);
     $filtered = trim($filtered);
 
+    $filtered_explode = explode('|',$filtered,2);
+
     // spara i databas med prep statements
-    if(!$stmt = $mysqli->prepare("INSERT INTO wordlist(word) VALUES (?)")){   
+    if(!$stmt = $mysqli->prepare("INSERT INTO wordlist(word, description) VALUES (?, ?)")){   
     echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;    
     }
     // viktigt att typen är rätt, si samt att antalet värden stämmer överens med placeholders i SQL
-    if (!$stmt->bind_param("s", $filtered)) {
+    if (!$stmt->bind_param("ss", $filtered_explode[0], $filtered_explode[1])) {
     echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
     }
 
-    if (!$stmt->execute()) {
-    echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+
+     $sql = "SELECT * FROM wordlist WHERE word = '$filtered_explode[0]'";
+    $result = $mysqli->query($sql);
+
+    if(empty($filtered_explode[0])) {
+    } else {
+    if($result->num_rows > 0) {
+    } else {
+    $stmt->execute();
+    if ($result === false) {
+        echo "SQL error: " .$conn->error;
     }
+}
     /*    
     $sql = "SELECT text FROM test";
         
@@ -43,7 +55,7 @@
 
     http_response_code(200);
     header('Content-type:application/json;charset=utf-8');
-    echo json_encode("The word " . $filtered . " has been added!", JSON_UNESCAPED_UNICODE);
+    echo json_encode("The word " . $filtered_explode[0] . " with the description " . $filtered_explode[1] . " has been added!", JSON_UNESCAPED_UNICODE);
 
     }
 
