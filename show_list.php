@@ -1,69 +1,55 @@
 <?php
 
-$conn = new mysqli("localhost", "boxpek", "c9W0rfw4FvLgIiEE", "team2");
-
-if($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
-
-if (!$conn->set_charset("utf8")) {
-    echo "Error loading character set utf8: " . $conn->error;
-    exit();
-}
-
-$stmt = $conn->prepare("INSERT IGNORE INTO wordlist (word)  VALUES (?)");
-	$stmt->bind_param("s", $filtered);
-
-
-if(isset($_POST["text"])) {
-	http_response_code(200);
-	header('Content-type:application/json;charset=utf-8');
-	$filtered = filter_input(INPUT_POST, "text" , FILTER_SANITIZE_SPECIAL_CHARS);
-	$filtered = trim($filtered);
-
-	$sql = "SELECT * FROM wordlist WHERE word = '$filtered'";
-	$result = $conn->query($sql);
-
-	if(empty($filtered)) {
-	} else {
-	if($result->num_rows > 0) {
-	} else {
-	$stmt->execute();
-	if ($result === false) {
-		echo "SQL error: " .$conn->error;
-	}
-}
-}
-
-	$sql = "SELECT * FROM wordlist";
-	$result = $conn->query($sql);
-
-	$resArr = [];
-
-	while ($row = $result->fetch_assoc()) {
-	$resArr[] = $row["word"];
-	
-	}
-
-	echo json_encode($resArr, JSON_UNESCAPED_UNICODE);
-
-	/*$rand = $resArr[mt_rand(0, count($resArr) -1)];
-	$resArrEncoded = json_encode($rand);
-
-	$resArrDecoded = json_decode($resArrEncoded);
-	
-	echo json_encode($resArrDecoded->ord, JSON_UNESCAPED_UNICODE);*/
+        // databas
+    $mysqli = new mysqli("localhost", "boxpek", "c9W0rfw4FvLgIiEE", "team2");
+    /* check connection */
+    if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') '
+            . $mysqli->connect_error);
+    }
+        
+    $json_array = array();
+    
+    if(isset($_POST["text"]))
+    {
+        
+        http_response_code(200);
+        header('Content-type:application/json;charset=utf-8');
+    
+        echo '
+        {
+            "attachments": [
+                {
+                    "pretext": "In wordlist",
+                    "text":"';
+                        $result = $mysqli->query("SELECT * FROM wordlist");
+                        if(mysqli_num_rows($result) > 0)
+                        {
+                            while ($row = $result->fetch_assoc()) {
+                                echo  $row["word"] . ": " . $row["description"] . '\n';
+                            }
+                        }
+                        else{
+                            echo "0 results";
+                        }
+                        $mysqli->close();
+                    echo'"
+                }
+            ]
+        }';
 
 
+        
+    }
 
-$filtered = $conn->real_escape_string($filtered);
-	
+    else {
+    http_response_code(400);
+    header('Content-type:application/json;charset=utf-8');
+    echo json_encode("error");
+    }   
+           
+    /*echo '<pre>';
+        print_r($json_array);
+    echo '</pre>';*/
 
-
-} else {
-	http_response_code(400);
-}
-
-$stmt->close();
-$conn->close();
 ?>
