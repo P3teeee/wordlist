@@ -34,11 +34,19 @@
     if(empty($filtered_explode[0])) {
     } else {
     if($result->num_rows > 0) {
+         http_response_code(200);
+        echo json_encode("detta namn finns redan ");
     } else {
     $stmt->execute();
+    http_response_code(200);
+    header('Content-type:application/json;charset=utf-8');
+    echo json_encode("The word " . $filtered_explode[0] . " with the description " . $filtered_explode[1] . " has been added!", JSON_UNESCAPED_UNICODE);
     if ($result === false) {
+        http_response_code(400);
         echo "SQL error: " .$conn->error;
+        echo json_encode("detta namn finns redan ");
     }
+}
 }
     /*    
     $sql = "SELECT text FROM test";
@@ -53,9 +61,7 @@
         
     echo json_encode("The word " . $json_array . " has been added!");*/
 
-    http_response_code(200);
-    header('Content-type:application/json;charset=utf-8');
-    echo json_encode("The word " . $filtered_explode[0] . " with the description " . $filtered_explode[1] . " has been added!", JSON_UNESCAPED_UNICODE);
+    
 
     }
 
