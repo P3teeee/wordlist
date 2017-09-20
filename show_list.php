@@ -22,7 +22,7 @@
                 {
                     "pretext": "In wordlist",
                     "text":"';
-                        $result = $mysqli->query("SELECT * FROM wordlist");
+                        $result = $mysqli->query("SELECT * FROM wordlist ORDER BY id DESC");
                         if(mysqli_num_rows($result) > 0)
                         {
                             while ($row = $result->fetch_assoc()) {
