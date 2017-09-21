@@ -35,7 +35,7 @@
     } else {
     if($result->num_rows > 0) {
          http_response_code(200);
-        echo json_encode("detta namn finns redan ");
+        echo json_encode("This word does already exist. ");
     } else {
     $stmt->execute();
     if(empty($filtered_explode[1])) {
@@ -50,7 +50,7 @@
         if ($result === false) {
         http_response_code(400);
         echo "SQL error: " .$conn->error;
-        echo json_encode("detta namn finns redan ");
+        echo json_encode("This word does already exist. ");
     }
 }
 }

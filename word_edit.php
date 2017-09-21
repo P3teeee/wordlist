@@ -23,14 +23,14 @@
 
     if (empty($filtered_explode[0])) {
     	http_response_code(200);
-    	echo json_encode("Skriv in ett ord");
+    	echo json_encode("Write down a word.");
     } else {
     	if($result->num_rows == 0) {
-    		echo json_encode("Detta ord finns inte");
+    		echo json_encode("This word doesn't exist.");
     	} else{
     if ($mysqli->query($sql1) === TRUE) {
     	http_response_code(200);
-    echo  json_encode("Record updated successfully");
+    echo  json_encode("Record updated successfully.");
 		} else {
     echo  json_encode("Error updating record: " . $mysqli->error);
 		}

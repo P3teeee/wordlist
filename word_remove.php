@@ -27,11 +27,11 @@
         
         if (empty($filtered)) {
         http_response_code(200);
-        echo json_encode("Write a word to delete.");
+        echo json_encode("Write down a word.");
         } 
         
         else {
-        if($result->num_rows === 0) {
+        if($result->num_rows == 0) {
         echo json_encode("This word doens't exist.");
         }else {
             $stmt->execute();
